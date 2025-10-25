@@ -1,0 +1,66 @@
+<div class="product-dashboard">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <h2>🛍️ Product Management</h2>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> Add Product
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+        placeholder="Search by name or brand"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Category</mat-label>
+      <mat-select [(value)]="selectedCategory" (selectionChange)="applyFilters()">
+        <mat-option value="">All</mat-option>
+        <mat-option *ngFor="let cat of uniqueCategories" [value]="cat">
+          {{ cat }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="products-grid" *ngIf="!loading">
+    <mat-card
+      *ngFor="let product of filteredProducts"
+      class="product-card"
+      (click)="openProductDetails(product)"
+    >
+      <div class="image-container">
+        <img
+          [src]="'http://localhost:3000' + (product.images?.[0])"
+          alt="{{ product.name }}"
+          class="product-image"
+        />
+        <span class="featured-badge" *ngIf="product.isFeatured">⭐ Featured</span>
+      </div>
+
+      <mat-card-content>
+        <h3>{{ product.name }}</h3>
+        <p class="brand">{{ product.brand || 'No brand' }}</p>
+        <p class="price">{{ product.price | currency }}</p>
+        <p class="category">
+          <strong>Category:</strong>
+          {{ product.category.name }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

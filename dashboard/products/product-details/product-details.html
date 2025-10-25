@@ -1,0 +1,85 @@
+<div class="product-details-page" *ngIf="product; else loadingTpl">
+  <div class="header">
+    <h1>{{ product.name }}</h1>
+    <div class="actions">
+      <button mat-icon-button matTooltip="Edit Product" color="primary" (click)="editProduct()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Toggle Featured" color="accent" (click)="toggleFeatured()">
+        <mat-icon>{{ product.isFeatured ? 'star' : 'star_border' }}</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete Product" color="warn" (click)="deleteProduct()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="product-container">
+    <!-- Image Carousel -->
+    <div class="image-section">
+      <div class="carousel" *ngIf="product.images?.length; else noImageTpl">
+        <button mat-icon-button class="nav-btn left" (click)="prevImage()" *ngIf="product.images!.length > 1">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <img
+          [src]="'http://localhost:3000' + product.images![currentImageIndex]"
+          alt="{{ product.name }}"
+          class="product-image"
+        />
+
+        <button mat-icon-button class="nav-btn right" (click)="nextImage()" *ngIf="product.images!.length > 1">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <ng-template #noImageTpl>
+        <div class="no-image">
+          <mat-icon>image_not_supported</mat-icon>
+          <p>No images available</p>
+        </div>
+      </ng-template>
+
+      <div class="indicators" *ngIf="product.images?.length! > 1">
+        <span
+          *ngFor="let img of product.images; let i = index"
+          [class.active]="i === currentImageIndex"
+          (click)="goToImage(i)"
+        ></span>
+      </div>
+    </div>
+
+    <!-- Product Information -->
+    <div class="info-section">
+      <h2>{{ product.brand || 'No brand' }}</h2>
+      <p><strong>Category:</strong> {{ product.category.name || 'Uncategorized' }}</p>
+      <p><strong>Price:</strong> {{ product.price | currency:'USD' }}</p>
+      <p>
+        <strong>Stock:</strong>
+        <span [ngClass]="{ 'in-stock': product.stock > 0, 'out-of-stock': product.stock === 0 }">
+          {{ product.stock > 0 ? product.stock + ' available' : 'Out of stock' }}
+        </span>
+      </p>
+      <p>
+        <strong>Featured:</strong>
+        <mat-icon color="accent">{{ product.isFeatured ? 'star' : 'star_border' }}</mat-icon>
+      </p>
+
+      <mat-divider></mat-divider>
+
+      <p class="description">
+        <strong>Description:</strong><br />
+        {{ product.description || 'No description available.' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-container">
+    <mat-icon>hourglass_empty</mat-icon>
+    <p>Loading product details...</p>
+  </div>
+</ng-template>

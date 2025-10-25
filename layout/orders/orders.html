@@ -1,0 +1,23 @@
+<div class="orders-container" *ngIf="orders.length;">
+  <h1>Your Orders</h1>
+  <div class="order-card" *ngFor="let order of orders">
+    <h3>Order #{{ order._id }}</h3>
+    <p>Shipping Address: {{ order.shippingAddress.label }}</p>
+    <p>Status: {{ order.status }}</p>
+    <p>Total: ${{ order.totalPrice }}</p>
+    <button mat-raised-button color="warn" *ngIf="order.status === 'pending'" (click)="cancelOrder(order._id)">Cancel Order</button>
+    <div class="order-items">
+      <p>Items:</p>
+      <ul>
+        <li *ngFor="let item of order.items">
+          <p>{{ item.product.name }}</p>
+          <p>${{ item.product.finalPrice * item.quantity }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyTpl>
+  <p>You have no orders.</p>
+</ng-template>

@@ -1,0 +1,75 @@
+<div class="category-dashboard">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <h2>📂 Category Management</h2>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> Add Category
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+        placeholder="Search by name"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select [(value)]="selectedStatus" (selectionChange)="applyFilters()">
+        <mat-option value="">All</mat-option>
+        <mat-option value="active">Active</mat-option>
+        <mat-option value="inactive">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Category Grid -->
+  <div class="categories-grid" *ngIf="!loading">
+    <mat-card *ngFor="let category of filteredCategories" class="category-card">
+      <img
+        *ngIf="category.image"
+        [src]="'http://localhost:3000' + (category.image)"
+        alt="{{ category.name }}"
+        class="category-image"
+      />
+      <div *ngIf="!category.image" class="no-image">
+        <mat-icon>image_not_supported</mat-icon>
+      </div>
+
+      <mat-card-content>
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.description || 'No description' }}</p>
+        <p>
+          <strong>Status:</strong>
+          <span [class.active]="category.isActive" [class.inactive]="!category.isActive">
+            {{ category.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-icon-button color="primary" (click)="openEditDialog(category)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="toggleActive(category)">
+          <mat-icon>{{ category.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteCategory(category._id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

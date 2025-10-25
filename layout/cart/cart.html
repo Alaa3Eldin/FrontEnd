@@ -1,0 +1,29 @@
+<div class="cart-container" *ngIf="cart?.items?.length; else emptyTpl">
+  <h1>Your Cart</h1>
+
+  <div class="cart-item" *ngFor="let item of cart.items">
+    <img [src]="'http://localhost:3000' + item.product.images[0]" />
+    <div class="info">
+      <h3>{{ item.product.name }}</h3>
+      <p>${{ item.product.finalPrice * item.quantity }}</p>
+      <input type="number" [value]="item.quantity" 
+             (change)="updateQuantity(item.product._id, $any($event.target).value)" />
+      <button mat-icon-button color="warn" (click)="removeItem(item.product._id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <h3>Select Address:</h3>
+  <mat-form-field appearance="outline">
+    <mat-label>Address Label</mat-label>
+    <input matInput [(ngModel)]="selectedAddressLabel" placeholder="Home / Work / Other" />
+  </mat-form-field>
+
+  <h2>Total: ${{ cart.totalPrice }}</h2>
+  <button mat-raised-button color="primary" (click)="proceedToCheckout()">Proceed to Checkout</button>
+</div>
+
+<ng-template #emptyTpl>
+  <p>Your cart is empty.</p>
+</ng-template>

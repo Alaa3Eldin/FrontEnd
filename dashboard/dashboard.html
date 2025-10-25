@@ -1,0 +1,56 @@
+<div class="dashboard-container" [class.mobile]="isMobile">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.closed]="!isSidebarOpen">
+    <h2 class="logo">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span *ngIf="isSidebarOpen">Admin Panel</span>
+    </h2>
+
+    <nav>
+      <a routerLink="users" routerLinkActive="active">
+        <mat-icon>group</mat-icon>
+        <span *ngIf="isSidebarOpen">Users</span>
+      </a>
+      <a routerLink="products" routerLinkActive="active">
+        <mat-icon>inventory_2</mat-icon>
+        <span *ngIf="isSidebarOpen">Products</span>
+      </a>
+      <a routerLink="categories" routerLinkActive="active">
+        <mat-icon>category</mat-icon>
+        <span *ngIf="isSidebarOpen">Categories</span>
+      </a> 
+      <a routerLink="orders" routerLinkActive="active">
+        <mat-icon>shopping_cart</mat-icon>
+        <span *ngIf="isSidebarOpen">Orders</span>
+      </a>
+      <a routerLink="testimonials" routerLinkActive="active">
+        <mat-icon>rate_review</mat-icon>
+        <span *ngIf="isSidebarOpen">Testimonials</span>
+      </a>
+      <a routerLink="fqa" routerLinkActive="active">
+        <mat-icon>help_outline</mat-icon>
+        <span *ngIf="isSidebarOpen">FAQs</span>
+      </a>
+
+      <a class="logout" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span *ngIf="isSidebarOpen">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <div class="overlay" *ngIf="isMobile && isSidebarOpen" (click)="toggleSidebar()"></div>
+
+
+  <!-- Topbar (mobile toggle button) -->
+  <header class="topbar" *ngIf="isMobile">
+    <button mat-icon-button (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h3>Admin Dashboard</h3>
+  </header>
+
+  <!-- Main Content -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

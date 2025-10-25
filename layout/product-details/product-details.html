@@ -1,0 +1,23 @@
+<div class="product-details-container" *ngIf="product; else loadingTpl">
+  <mat-card class="product-card">
+    <div class="product-image">
+      <img [src]="'http://localhost:3000' + product.images![product.currentImageIndex]" />
+      <button class="prev" (click)="prevImage()">‹</button>
+      <button class="next" (click)="nextImage()">›</button>
+    </div>
+    <mat-card-content>
+      <h2>{{ product.name }}</h2>
+      <p class="price">${{ product.finalPrice }}</p>
+      <p>{{ product.description }}</p>
+
+      <div class="quantity-add">
+        <input type="number" min="1" [(ngModel)]="quantity" />
+        <button mat-raised-button color="primary" (click)="addToCart()">Add to Cart</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #loadingTpl>
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</ng-template>

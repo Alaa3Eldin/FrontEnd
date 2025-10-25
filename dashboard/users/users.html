@@ -1,0 +1,75 @@
+<div class="users-container" *ngIf="!loading; else loader">
+    <mat-card>
+        <mat-card-title>👥 Manage Users</mat-card-title>
+        <mat-card-subtitle>Admin control panel for managing all users</mat-card-subtitle>
+
+        <div class="actions-bar">
+            <button mat-raised-button color="primary" (click)="openCreateAdminDialog()">➕ Create Admin</button>
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Filter Users</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or email" />
+            </mat-form-field>
+        </div>
+
+        <div class="actions-bar">
+            <div class="filter-group">
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Search Users</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or email" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="role-filter">
+                    <mat-label>Filter by Role</mat-label>
+                    <mat-select [(value)]="selectedRole" (selectionChange)="filterByRole()">
+                        <mat-option value="">All</mat-option>
+                        <mat-option value="admin">Admin</mat-option>
+                        <mat-option value="user">User</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.name }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+                <mat-header-cell *matHeaderCellDef>Phone</mat-header-cell>
+                <mat-cell *matCellDef="let user">{{ user.phone }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="role">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Role</mat-header-cell>
+                <mat-cell *matCellDef="let user">
+                    <span [class.admin-role]="user.role === 'admin'">{{ user.role }}</span>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                <mat-cell *matCellDef="let user">
+                    <mat-slide-toggle [checked]="user.isActive" (change)="toggleStatus(user._id!)" color="primary">
+                        {{ user.isActive ? 'Active' : 'Inactive' }}
+                    </mat-slide-toggle>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+    </mat-card>
+</div>
+
+<ng-template #loader>
+    <div class="loading-spinner">
+        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    </div>
+</ng-template>

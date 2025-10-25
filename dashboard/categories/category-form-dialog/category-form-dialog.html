@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'create' ? 'Create Category' : 'Edit Category' }}
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="category-form">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+
+  <div class="file-upload">
+    <label for="image">Image:</label>
+    <input type="file" id="image" (change)="onFileSelected($event)" />
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit">
+      {{ data.mode === 'create' ? 'Create' : 'Update' }}
+    </button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</form>

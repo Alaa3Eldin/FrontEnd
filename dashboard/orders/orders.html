@@ -1,0 +1,114 @@
+<div class="orders-container">
+  <h2 class="page-title">Orders Management</h2>
+
+  <!-- Filter Orders -->
+  <div class="filter-bar">
+    <label for="status">Filter by Status:</label>
+    <select
+      id="status"
+      class="status-filter"
+      (change)="filterOrders($event)"
+    >
+      <option value="">All</option>
+      <option value="pending">Pending</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <!-- Orders Table -->
+  <table class="orders-table" *ngIf="orders.length > 0; else noOrders">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Email</th>
+        <th>Total Price</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ order.user?.name || 'Unknown User' }}</td>
+        <td>{{ order.user?.email || '—' }}</td>
+        <td>{{ order.totalPrice }}</td>
+        <td>
+          <span
+            [ngClass]="{
+              'status-pending': order.status === 'pending',
+              'status-shipped': order.status === 'shipped',
+              'status-delivered': order.status === 'received',
+              'status-cancelled': order.status === 'canceled_by_admin'
+            }"
+          >
+            {{ order.status | titlecase }}
+          </span>
+        </td>
+        <td>{{ order.createdAt | date: 'medium' }}</td>
+        <td>
+          <button mat-raised-button color="primary" (click)="viewOrderDetails(order)">
+            View Details
+          </button>
+          <button
+  mat-raised-button
+  color="accent"
+  (click)="updateStatus(order._id!, order.status)"
+  [disabled]="order.status === 'shipped' || order.status === 'rejected' || order.status === 'canceled_by_admin'"
+>
+  Update
+</button>
+
+<button
+  mat-raised-button
+  color="warn"
+  (click)="cancelOrder(order._id!)"
+  [disabled]="order.status === 'shipped'"
+>
+  Cancel
+</button>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No Orders Message -->
+  <ng-template #noOrders>
+    <div class="no-orders">No orders found.</div>
+  </ng-template>
+
+  <!-- Order Details Modal -->
+  <ng-template #orderDetailsModal>
+    <h2 mat-dialog-title>Order Details</h2>
+    <mat-dialog-content class="dialog-content">
+      <h3>User Info</h3>
+      <p><strong>Name:</strong> {{ selectedOrder?.user?.name }}</p>
+      <p><strong>Email:</strong> {{ selectedOrder?.user?.email }}</p>
+
+      <h3>Shipping Address</h3>
+      <p><strong>Label:</strong> {{ selectedOrder?.shippingAddress?.label }}</p>
+      <p><strong>Street:</strong> {{ selectedOrder?.shippingAddress?.street }}</p>
+      <p><strong>City:</strong> {{ selectedOrder?.shippingAddress?.city }}</p>
+      <p><strong>Country:</strong> {{ selectedOrder?.shippingAddress?.country }}</p>
+
+<h3>Items</h3>
+<ul>
+  <li *ngFor="let item of selectedOrder?.items">
+    {{ item.product.name || item.name }} × {{ item.quantity }} — ${{ item.priceAtOrderTime }}
+  </li>
+</ul>
+
+
+      <h3>Total:</h3>
+      <p>${{ selectedOrder?.totalPrice  }}</p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close color="warn">Close</button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

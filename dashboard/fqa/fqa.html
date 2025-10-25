@@ -1,0 +1,96 @@
+<div class="fqa-container">
+  <h2 class="title">📘 Manage FAQs</h2>
+
+  <mat-card class="faq-form-card">
+    <h3>{{ editingFaq ? '✏️ Edit FAQ' : '➕ Add New FAQ' }}</h3>
+
+    <form [formGroup]="faqForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Question</mat-label>
+        <input matInput formControlName="question" placeholder="Enter question" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Answer</mat-label>
+        <textarea matInput rows="3" formControlName="answer" placeholder="Enter answer"></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="faqForm.invalid">
+          {{ editingFaq ? 'Update' : 'Add' }}
+        </button>
+        <button
+          *ngIf="editingFaq"
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="cancelEdit()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && faqs.length > 0" class="faq-table-container">
+    <table mat-table [dataSource]="faqs" class="mat-elevation-z8">
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let f; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="question">
+        <th mat-header-cell *matHeaderCellDef>Question</th>
+        <td mat-cell *matCellDef="let f">{{ f.question }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="answer">
+        <th mat-header-cell *matHeaderCellDef>Answer</th>
+        <td mat-cell *matCellDef="let f">{{ f.answer }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let f">
+          <span [class.active]="f.isActive" [class.inactive]="!f.isActive">
+            {{ f.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let f">{{ f.createdAt | date:'short' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let f">
+          <button mat-icon-button color="primary" (click)="editFaq(f)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="accent" (click)="toggleStatus(f._id!)">
+            <mat-icon>{{ f.isActive ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteFaq(f._id!)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && faqs.length === 0" class="empty-state">
+    <mat-icon>help_outline</mat-icon>
+    <p>No FAQs found.</p>
+  </div>
+</div>

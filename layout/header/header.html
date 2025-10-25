@@ -1,0 +1,46 @@
+<header class="navbar">
+  <div class="nav-container">
+    <!-- Brand -->
+    <a class="brand" routerLink="/">E-Shop</a>
+
+    <!-- Menu Toggle (Mobile) -->
+    <button class="menu-btn" (click)="toggleMenu()">
+      <span class="material-icons">menu</span>
+    </button>
+
+    <!-- Nav Links -->
+    <nav [class.open]="menuOpen" class="nav-links">
+      <a routerLink="" routerLinkActive="active" (click)="closeMenu()">Home</a>
+      <a routerLink="shop" routerLinkActive="active" (click)="closeMenu()">Shop</a>
+      <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">About</a>
+      <a routerLink="contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
+    </nav>
+
+    <div class="right-section">
+      <!-- Cart -->
+      <a routerLink="/cart" class="cart">
+        <span class="material-icons">shopping_cart</span>
+        <span class="badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+      </a>
+
+      <!-- User Menu -->
+      <div *ngIf="isLoggedIn; else loginBtn" class="user-menu">
+        <button class="user-btn" (click)="toggleUserMenu()">
+          <span class="material-icons">account_circle</span>
+          <span>{{ userName }}</span>
+        </button>
+        <div class="dropdown" *ngIf="userMenuOpen">
+          <a routerLink="/profile">Profile</a>
+          <a routerLink="/orders">My Orders</a>
+          <hr />
+          <a (click)="logout()" class="logout">Logout</a>
+        </div>
+      </div>
+
+      <!-- Login Button -->
+      <ng-template #loginBtn>
+        <a routerLink="/login" class="login-btn">Login</a>
+      </ng-template>
+    </div>
+  </div>
+</header>

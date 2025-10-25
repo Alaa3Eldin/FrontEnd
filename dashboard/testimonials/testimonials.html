@@ -1,0 +1,73 @@
+<div class="container">
+  <h2>🗣️ Manage Testimonials</h2>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <mat-spinner diameter="50" color="primary"></mat-spinner>
+  </div>
+
+  <!-- Table View (Desktop) -->
+  <table class="table" *ngIf="!loading && testimonials.length > 0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Message</th>
+        <th>Rating</th>
+        <th>Approved</th>
+        <th>Featured</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of testimonials; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>
+          <strong>{{ t.user?.name || t.name }}</strong><br />
+          <small class="text-muted">{{ t.user?.email }}</small>
+        </td>
+        <td style="max-width: 300px">{{ t.message }}</td>
+        <td>{{ t.rating }} ⭐</td>
+        <td>
+          <span [class.text-success]="t.isApproved" [class.text-danger]="!t.isApproved">
+            {{ t.isApproved ? 'Approved' : 'Pending' }}
+          </span>
+        </td>
+        <td>
+          <span [class.text-success]="t.isFeatured" [class.text-muted]="!t.isFeatured">
+            {{ t.isFeatured ? 'Yes' : 'No' }}
+          </span>
+        </td>
+        <td>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="approveTestimonial(t._id!)"
+            [disabled]="t.isApproved"
+          >
+            <mat-icon>check_circle</mat-icon> Approve
+          </button>
+
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="toggleFeatured(t._id!)"
+            [disabled]="!t.isApproved"
+          >
+            <mat-icon>star</mat-icon>
+            {{ t.isFeatured ? 'Unfeature' : 'Feature' }}
+          </button>
+
+          <button mat-raised-button color="warn" (click)="deleteTestimonial(t._id!)">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && testimonials.length === 0" class="text-center text-muted mt-4">
+    No testimonials found.
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="home-container">
+  <!--  Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Discover the Latest Trends</h1>
+      <p>Shop the newest arrivals and exclusive collections just for you</p>
+      <button mat-raised-button color="primary" routerLink="/shop" class="shop-btn">
+        Shop Now
+      </button>
+    </div>
+  </section>
+
+  <!--  Categories -->
+  <section class="categories">
+    <h2 class="section-title">Shop by Category</h2>
+    <div *ngIf="loadingCategories" class="loading">Loading categories...</div>
+    <div *ngIf="errorCategories" class="error">{{ errorCategories }}</div>
+    <div class="category-grid" *ngIf="!loadingCategories && categories.length">
+      <div class="category-card" *ngFor="let cat of categories" (click)="filterByCategory(cat._id)">
+        <div class="category-image-wrapper">
+          <img [src]="'http://localhost:3000' + cat.image" [alt]="cat.name" class="category-image" />
+        </div>
+        <h3>{{ cat.name }}</h3>
+      </div>
+    </div>
+    <p *ngIf="!loadingCategories && !categories.length" class="empty">No categories found.</p>
+  </section>
+
+  <!--  Products -->
+  <section class="products">
+    <h2 class="section-title">Featured Products</h2>
+    <div *ngIf="loadingProducts" class="loading">Loading products...</div>
+    <div *ngIf="errorProducts" class="error">{{ errorProducts }}</div>
+    <div class="product-grid" *ngIf="!loadingProducts && products.length">
+      <div class="product-card" *ngFor="let product of products">
+        <div class="product-image" [routerLink]="['/products', product.slug]">
+          <img [src]="'http://localhost:3000' + (product.images?.[0] || '')" alt="{{ product.name }}" class="main-image"
+               (error)="$event.target.src = 'assets/images/no-image.jpg'" />
+          <div class="product-overlay">
+            <button mat-icon-button color="primary" (click)="addToCart(product._id)">
+              <mat-icon>plus</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" [routerLink]="['/products', product.slug]">
+              <mat-icon>eye</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p class="price">${{ product.finalPrice }}</p>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!loadingProducts && !products.length" class="empty">No products found.</p>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <div *ngIf="loadingTestimonials" class="loading">Loading testimonials...</div>
+    <div *ngIf="errorTestimonials" class="error">{{ errorTestimonials }}</div>
+    <div class="testimonial-grid" *ngIf="!loadingTestimonials && testimonials.length">
+      <div class="testimonial-card" *ngFor="let t of testimonials">
+        <p class="message">"{{ t.message }}"</p>
+        <p class="rating">Rating: {{ t.rating }}/5</p>
+      </div>
+    </div>
+    <p *ngIf="!loadingTestimonials && !testimonials.length" class="empty">No testimonials available.</p>
+  </section>
+
+  <!--  FAQ -->
+  <section class="faq">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div *ngIf="loadingFaqs" class="loading">Loading FAQs...</div>
+    <div *ngIf="errorFaqs" class="error">{{ errorFaqs }}</div>
+    <mat-accordion *ngIf="!loadingFaqs && faqs.length">
+      <mat-expansion-panel *ngFor="let faq of faqs">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ faq.question }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>{{ faq.answer }}</p>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <p *ngIf="!loadingFaqs && !faqs.length" class="empty">No FAQs available.</p>
+  </section>
+</div>
